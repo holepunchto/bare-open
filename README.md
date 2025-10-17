@@ -10,6 +10,10 @@ const open = require('bare-open')
 open('/Applications/Firefox.app')
 ```
 
+## API
+
+#### `open(app[, argument])`
+
 ## License
 
 Apache-2.0
