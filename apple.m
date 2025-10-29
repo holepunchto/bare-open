@@ -7,8 +7,6 @@ bare__open(const char *app, const char *arg) {
 
     NSWorkspaceOpenConfiguration *configuration = [NSWorkspaceOpenConfiguration configuration];
 
-    configuration.createsNewApplicationInstance = YES;
-
     if (arg) configuration.arguments = @[ [NSString stringWithFormat:@"%s", arg] ];
 
     __block NSError *error = nil;
