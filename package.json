@@ -1,6 +1,6 @@
 {
   "name": "bare-open",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Cross-platform application launcher for Bare",
   "exports": {
     "./package": "./package.json",
