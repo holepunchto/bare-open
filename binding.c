@@ -1,7 +1,9 @@
 #include <assert.h>
 #include <bare.h>
 #include <js.h>
+#include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 #include <utf.h>
 
 int
@@ -29,6 +31,8 @@ bare_open(js_env_t *env, js_callback_info_t *info) {
   err = js_get_value_string_utf8(env, argv[0], app, app_len, NULL);
   assert(err == 0);
 
+  bool valid = strlen((char *) app) == app_len - 1 /* NULL */;
+
   utf8_t *arg = NULL;
 
   if (argc == 2) {
@@ -41,12 +45,21 @@ bare_open(js_env_t *env, js_callback_info_t *info) {
     arg = malloc(arg_len);
     err = js_get_value_string_utf8(env, argv[1], arg, arg_len, NULL);
     assert(err == 0);
+
+    if (strlen((char *) arg) != arg_len - 1 /* NULL */) valid = false;
   }
 
-  err = bare__open((char *) app, (char *) arg);
+  if (valid) err = bare__open((char *) app, (char *) arg);
 
   free(app);
   free(arg);
+
+  if (!valid) {
+    err = js_throw_type_error(env, NULL, "Arguments must not contain null bytes");
+    assert(err == 0);
+
+    return NULL;
+  }
 
   if (err < 0) {
     err = js_throw_error(env, NULL, "Failed to launch application");
